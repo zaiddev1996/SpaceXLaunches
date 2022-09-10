@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/navigation_launches">
+
+    <fragment
+        android:id="@+id/navigation_launches"
+        android:name="zaiddev1996.android.moneseassignment.ui.main.MainFragment"
+        android:label="@string/frag_launch"
+        app:destination="@id/navigation_rocket"
+        tools:layout="@layout/fragment_main">
+        <action
+            android:id="@+id/action_launch_to_rocket_detail"
+            app:destination="@id/navigation_rocket">
+            <argument
+                android:name="id"
+                app:argType="string" />
+        </action>
+    </fragment>
+
+    <fragment
+        android:id="@+id/navigation_rocket"
+        android:name="zaiddev1996.android.moneseassignment.ui.rocket.RocketFragment"
+        android:label="@string/frag_rocket"
+        tools:layout="@layout/fragment_rocket" />
+
+</navigation>

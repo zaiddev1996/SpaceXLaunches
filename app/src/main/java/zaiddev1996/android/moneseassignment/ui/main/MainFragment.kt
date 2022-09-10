@@ -69,8 +69,8 @@ class MainFragment : Fragment() {
     }
 
     private fun setObservers() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 mainViewModel.launchStateFlow.collect {
                     when (it) {
                         is MainViewModel.LaunchesState.Success -> {
@@ -93,6 +93,7 @@ class MainFragment : Fragment() {
                         else -> {}
                     }
                 }
+
             }
         }
 

@@ -52,56 +52,54 @@ class RocketFragment : Fragment() {
     }
 
     private fun setObservers() {
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                rocketViewModel.rocketStateFlow.collect {
-                    when (it) {
-                        is RocketViewModel.RocketState.Success -> {
-                            binding.animationView.cancelAnimation()
-                            binding.tvRocketName.text = it.data.name
-                            binding.tvCompanyName.text = it.data.company
-                            val height = "${it.data.height!!.feet}ft"
-                            binding.tvHeight.text = height
-                            val diameter = "${it.data.diameter!!.feet}ft"
-                            binding.tvDiameter.text = diameter
-                            val mass = "${it.data.mass!!.kg}kg"
-                            binding.tvMass.text = mass
-                            binding.tvDesc.text = it.data.description
-                            Glide.with(requireContext())
-                                .load(it.data.flickrImages[0])
-                                .into(binding.sivRocket)
-                        }
-
-                        is RocketViewModel.RocketState.Loading -> {
-                            if (it.loading) {
-                                binding.animationView.playAnimation()
-                            } else {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    rocketViewModel.rocketStateFlow.collect {
+                        when (it) {
+                            is RocketViewModel.RocketState.Success -> {
                                 binding.animationView.cancelAnimation()
+                                binding.tvRocketName.text = it.data.name
+                                binding.tvCompanyName.text = it.data.company
+                                val height = "${it.data.height!!.feet}ft"
+                                binding.tvHeight.text = height
+                                val diameter = "${it.data.diameter!!.feet}ft"
+                                binding.tvDiameter.text = diameter
+                                val mass = "${it.data.mass!!.kg}kg"
+                                binding.tvMass.text = mass
+                                binding.tvDesc.text = it.data.description
+                                Glide.with(requireContext())
+                                    .load(it.data.flickrImages[0])
+                                    .into(binding.sivRocket)
                             }
 
+                            is RocketViewModel.RocketState.Loading -> {
+                                if (it.loading) {
+                                    binding.animationView.playAnimation()
+                                } else {
+                                    binding.animationView.cancelAnimation()
+                                }
+
+                            }
+                            else -> {}
                         }
-                        else -> {}
                     }
                 }
 
-
-            }
-
-        }
-
-        lifecycleScope.launch {
-            repeatOnLifecycle(Lifecycle.State.STARTED) {
-                rocketViewModel.errorSharedFlow.collect {
-                    binding.animationView.cancelAnimation()
-                    Toast.makeText(
-                        requireContext(),
-                        it,
-                        Toast.LENGTH_LONG
-                    )
-                        .show()
+                launch {
+                    rocketViewModel.errorSharedFlow.collect {
+                        binding.animationView.cancelAnimation()
+                        Toast.makeText(
+                            requireContext(),
+                            it,
+                            Toast.LENGTH_LONG
+                        )
+                            .show()
+                    }
                 }
             }
         }
+
     }
 
     private fun setListeners() {
